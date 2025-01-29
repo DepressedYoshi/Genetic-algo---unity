@@ -2,31 +2,33 @@ using System;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.InputSystem.LowLevel;
+using UnityEngine.Rendering.Universal.Internal;
 public class PlayerScript : MonoBehaviour
 {
     public float speed = 5f;
     public float jumpForce = 10f;
-    public float mutationRate = 0.12f;
+    public float mutationRate = 0.09f;
     private bool jumping;
-    private int[] DNA = new int[70];
+    private int DNA_LENGTH = 30;
+    private int[] DNA = new int[30];
     private int index = 0;
     public float buffer = 0.5f; // Time delay between actions
     private float timer = 0f;   // Timer to track time elapsed since the last action4
     private float score = 0f;
+    private float highestScore = 0f;
     private Rigidbody2D rb;
     private GameManager gameManager;
 
     void Start()
-    {
+    {   
         rb = GetComponent<Rigidbody2D> ();
-        // getRandomColor();
-        // createDNA();
+        createDNA();
     }
 
-    void Update()
+    void FixedUpdate()
     {
         keyBoardInput();
-        // act();
+        act();
         updateScore();
     }
 
@@ -37,7 +39,7 @@ public class PlayerScript : MonoBehaviour
     private void act(){
 
         // Increment the timer
-        timer += Time.deltaTime;
+        timer += Time.fixedDeltaTime;
         // If the timer exceeds the buffer and there are actions left in the DNA
         if (index < DNA.Length && timer >= buffer)
         {
@@ -52,9 +54,17 @@ public class PlayerScript : MonoBehaviour
 
     private void updateScore()
     {
-        this.score =  (float)(transform.position.x + 0.1 * transform.position.y);;
+        float baseScore = transform.position.x;
+        float velocityBonus = rb.linearVelocity.x * 0.1f;
+        float airTimePenalty = !jumping ?  0 : Time.fixedDeltaTime * 0.2f;
+        score = baseScore + velocityBonus - airTimePenalty;
 
+        if (score > highestScore){
+            highestScore = score;
+        }
     }
+
+
 
     private void alertCompletion(){
         if(gameManager != null){
@@ -70,9 +80,10 @@ public class PlayerScript : MonoBehaviour
     }
     public void createDNA(int[] mom, int[] dad)
     {
-        for (int i = 0; i < DNA.Length; i++)
-        {
-            if(i < mom.Length/2){
+        int index = UnityEngine.Random.Range(0, DNA_LENGTH);
+
+        for (int i = 0; i < DNA.Length; i++){
+            if(i < index){
                 DNA[i] = mom[i];
             }else{
                 DNA[i] = dad[i];
@@ -96,8 +107,9 @@ public class PlayerScript : MonoBehaviour
     }
 
     public float getScore(){
-        return this.score;
+        return score - (highestScore - score);
     }
+
 
     private void doShit(int stuff)
     {
@@ -116,6 +128,7 @@ public class PlayerScript : MonoBehaviour
                 stop();
                 break;
             default:
+                MoveRight();
                 break;
         }
     }

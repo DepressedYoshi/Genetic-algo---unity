@@ -67,7 +67,7 @@ public class GameManager : MonoBehaviour
     {
         DeactivateAll(playerPool);
         Selection(playerPool);
-        Reproduce();
+        Reproduce(playerPool);
         RespawnPlayer(playerPool);
     }
 
@@ -106,11 +106,14 @@ public class GameManager : MonoBehaviour
         }
     
     }
-    private void Reproduce()
+    private void Reproduce(List<GameObject> playerPool)
     {
+        List<GameObject> bestGene = playerPool.GetRange(0, playerPool.Count/2);
+
         while (playerPool.Count < agentCount){
-            int[] momDNA = playerPool[Random.Range(0,playerPool.Count)].GetComponent<PlayerScript>().getDNA();
-            int[] dadDNA = playerPool[Random.Range(0,playerPool.Count)].GetComponent<PlayerScript>().getDNA();
+
+            int[] momDNA = bestGene[Random.Range(0,bestGene.Count)].GetComponent<PlayerScript>().getDNA();
+            int[] dadDNA = bestGene[Random.Range(0,bestGene.Count)].GetComponent<PlayerScript>().getDNA();
             GameObject john = Instantiate(playerObject); 
             john.GetComponent<PlayerScript>().createDNA(momDNA, dadDNA);
             john.GetComponent<PlayerScript>().SetGameManager(this);
