@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviour
     {
      InitializePool();
      createPlayers();   
+     Physics2D.simulationMode = SimulationMode2D.FixedUpdate;
     }
 
     private void InitializePool()

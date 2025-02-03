@@ -1,16 +1,13 @@
-using System;
-using JetBrains.Annotations;
+
 using UnityEngine;
-using UnityEngine.InputSystem.LowLevel;
-using UnityEngine.Rendering.Universal.Internal;
 public class PlayerScript : MonoBehaviour
 {
     public float speed = 5f;
     public float jumpForce = 10f;
     public float mutationRate = 0.09f;
     private bool jumping;
-    private int DNA_LENGTH = 30;
-    private int[] DNA = new int[30];
+    private int DNA_LENGTH = 70;
+    private int[] DNA = new int[70];
     private int index = 0;
     public float buffer = 0.5f; // Time delay between actions
     private float timer = 0f;   // Timer to track time elapsed since the last action4
@@ -54,10 +51,11 @@ public class PlayerScript : MonoBehaviour
 
     private void updateScore()
     {
-        float baseScore = transform.position.x;
-        float velocityBonus = rb.linearVelocity.x * 0.1f;
-        float airTimePenalty = !jumping ?  0 : Time.fixedDeltaTime * 0.2f;
-        score = baseScore + velocityBonus - airTimePenalty;
+        float baseScore = transform.position.x + transform.position.y;
+        // float velocityBonus = rb.linearVelocity.x * 0.1f;
+        // float airTimePenalty = !jumping ?  0 : Time.fixedDeltaTime * 0.2f;
+        // float heightPenalty = transform.position.y < -0.8 ? 20 : 0;
+        score = baseScore;
 
         if (score > highestScore){
             highestScore = score;
@@ -107,7 +105,7 @@ public class PlayerScript : MonoBehaviour
     }
 
     public float getScore(){
-        return score - (highestScore - score);
+        return score + highestScore;
     }
 
 
@@ -119,10 +117,10 @@ public class PlayerScript : MonoBehaviour
                 jump();
                 break;
             case 1:
-                MoveLeft();
+                MoveRight();
                 break;
             case 2:
-                MoveRight();
+                MoveLeft();
                 break;
             case 3:
                 stop();
