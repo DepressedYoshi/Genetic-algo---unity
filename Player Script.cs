@@ -2,14 +2,14 @@
 using UnityEngine;
 public class PlayerScript : MonoBehaviour
 {
-    public float speed = 5f;
-    public float jumpForce = 10f;
-    public float mutationRate = 0.09f;
+    public float speed = 6f;
+    public float jumpForce = 11f;
+    public float mutationRate = 0.1f;
     private bool jumping;
     private int DNA_LENGTH = 70;
-    private int[] DNA = new int[70];
+    private int[] DNA = new int[320];
     private int index = 0;
-    public float buffer = 0.5f; // Time delay between actions
+    public float buffer = 0.25f; // Time delay between actions
     private float timer = 0f;   // Timer to track time elapsed since the last action4
     private float score = 0f;
     private float highestScore = 0f;
@@ -153,19 +153,7 @@ public class PlayerScript : MonoBehaviour
         rb.linearVelocity = new Vector2(0,rb.linearVelocity.y);
 
     }
-    void getRandomColor()
-    {
-        SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
-        Color color = new Color(
-            UnityEngine.Random.Range(0f, 0.75f),
-            UnityEngine.Random.Range(0f, 0.95f),
-            UnityEngine.Random.Range(0f, 0.85f),
-            1f
-        );
-
-        spriteRenderer.color = color;
-    }
-
+    
     void keyBoardInput()
     {
         if (Input.GetKey(KeyCode.D))
