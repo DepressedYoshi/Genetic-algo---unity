@@ -1,4 +1,10 @@
-
+/*
+TODO: 
+- timer tracker 
+- Timer based heuristics
+*/
+using TMPro;
+using TMPro.Examples;
 using UnityEngine;
 public class PlayerScript : MonoBehaviour
 {
@@ -16,17 +22,22 @@ public class PlayerScript : MonoBehaviour
     private Rigidbody2D rb;
     private GameManager gameManager;
 
+
     void Start()
     {   
         rb = GetComponent<Rigidbody2D> ();
         createDNA();
     }
 
+void Update(){
+        updateScore();
+
+
+}
     void FixedUpdate()
     {
         keyBoardInput();
         act();
-        updateScore();
     }
 
     public void SetGameManager(GameManager gameManager){

@@ -1,3 +1,8 @@
+/*
+TODO: 
+- multi screen simulation 
+- user input absefd agent count 
+*/
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
