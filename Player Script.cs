@@ -2,14 +2,14 @@
 using UnityEngine;
 public class PlayerScript : MonoBehaviour
 {
-    public float speed = 6f;
-    public float jumpForce = 11f;
+    public float speed = 5f;
+    public float jumpForce = 8f;
     public float mutationRate = 0.1f;
     private bool jumping;
-    private int DNA_LENGTH = 70;
-    private int[] DNA = new int[320];
+    private int DNA_LENGTH = 140;
+    private int[] DNA;
     private int index = 0;
-    public float buffer = 0.25f; // Time delay between actions
+    private float buffer = 0.25f; // Time delay between actions
     private float timer = 0f;   // Timer to track time elapsed since the last action4
     private float score = 0f;
     private float highestScore = 0f;
@@ -70,16 +70,22 @@ public class PlayerScript : MonoBehaviour
         }
     }
     private void createDNA()
-    {
+    {   if(DNA == null){
+        DNA = new int[DNA_LENGTH];
         for (int i = 0; i < DNA.Length; i++)
         {
             DNA[i] = UnityEngine.Random.Range(0, 4);
         }
+        }
     }
     public void createDNA(int[] mom, int[] dad)
     {
-        int index = UnityEngine.Random.Range(0, DNA_LENGTH);
+        if (DNA == null) 
+    {
+        DNA = new int[DNA_LENGTH]; // Ensure DNA is always initialized
+    }
 
+        int index = UnityEngine.Random.Range(0, DNA_LENGTH);
         for (int i = 0; i < DNA.Length; i++){
             if(i < index){
                 DNA[i] = mom[i];
