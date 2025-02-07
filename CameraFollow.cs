@@ -4,7 +4,7 @@ using UnityEngine;
 public class CameraFollow : MonoBehaviour
 {
     public string playerTag = "Player"; // Tag assigned to the player prefab
-    public float smoothSpeed = 0.3f; // Speed of the camera's movement
+    public float smoothSpeed = 0.6f; // Speed of the camera's movement
     public Vector3 offset; // Offset to maintain a desired position relative to the target
     public float deadZoneRange;// how far does the target has to move to the right from the center of the camera for it to move 
     private Transform target; // The current target for the camera
