@@ -15,6 +15,7 @@ public class GameManager : MonoBehaviour
     private List<GameObject> playerPool = new List<GameObject>(); // Pool for player objects
     private int generationCount = 1;
     public TextMeshProUGUI  genCounterTextr; // UI shows generation number 
+    public TextMeshProUGUI agentCountText;
     public Button pauseButton;
     public Image buttonIcon;
     public Sprite pauseSprite;
@@ -30,6 +31,11 @@ public class GameManager : MonoBehaviour
      Physics2D.simulationMode = SimulationMode2D.FixedUpdate;
      if (genCounterTextr != null){
             genCounterTextr.text = "GEN: " + generationCount;
+        }
+        if (agentCountText != null){
+            agentCountText.text = "Population: " + agentCount;
+        }else{
+            Debug.Log("cant find the agent count ");
         }
     }
 
