@@ -23,6 +23,8 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        agentCount = MenuManager.agentCount; // Use the agent count set in the menu
+
      InitializePool();
      createPlayers();   
      Physics2D.simulationMode = SimulationMode2D.FixedUpdate;
