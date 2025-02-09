@@ -1,5 +1,6 @@
 /*
 TODO: 
+- Stat based heristics 
 - timer tracker 
 - Timer based heuristics
 */
@@ -12,7 +13,7 @@ public class PlayerScript : MonoBehaviour
     public float jumpForce = 8f;
     public float mutationRate = 0.1f;
     private bool jumping;
-    private int DNA_LENGTH = 140;
+    private int DNA_LENGTH = 210;
     private int[] DNA;
     private int index = 0;
     private float buffer = 0.25f; // Time delay between actions
