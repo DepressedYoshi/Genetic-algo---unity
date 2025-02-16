@@ -83,7 +83,6 @@ public class GameManager : MonoBehaviour
     }
 
     public void alertPlayerCompletion(){
-        Debug.Log("Gen " + generationCount + " has comepleted");
         generationCount++;
         if (genCounterTextr != null){
             genCounterTextr.text = "GEN: " + generationCount;
@@ -118,26 +117,53 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void Selection(List<GameObject> playerPool)
-    {
+    private void SortByScore(List<GameObject> playerpool){
+
         if (playerPool.Count != agentCount){
             Debug.LogWarning("SOMETHING WENT WRONG - the amount of starting player do not match the ones in slection process");
         }
         playerPool.Sort((a, b) =>b.GetComponent<PlayerScript>().getScore().CompareTo(a.GetComponent<PlayerScript>().getScore()));
+    }
+    private void Selection(List<GameObject> playerPool)
+    {
+        SortByScore(playerPool);    
+        List<float> scores = new List<float>();
+        foreach (GameObject p in playerPool){
+            scores.Add(p.GetComponent<PlayerScript>().getScore());
+        }
 
+         // assume a normal distribtuion of score 
+        float mean = CalculateMean(scores);
+        float stdDev = CalculateStandardDeviation(scores, mean);
+        float statisticalThreshold = mean + stdDev;
 
-        int asian = agentCount/5;
-        for (int i = playerPool.Count-1; i >= asian; i--){
-            GameObject p = playerPool[i];
-            playerPool.Remove(p);
-            Destroy(p);
+        // if the score is not normal distribution - when all player converged to 
+        scores.Sort();
+        int percentileIndex = Mathf.FloorToInt(scores.Count * 0.7f); // Top 30%
+        float percentileThreshold = scores[percentileIndex];
+
+        //Choose the one with stringer selection pressure 
+        float finalThreshold = Mathf.Max(statisticalThreshold, percentileThreshold);
+        Debug.Log($"Selection Threshold: {finalThreshold} (Mean: {mean}, StdDev: {stdDev}, 30th Percentile: {percentileThreshold})");
+
+        for (int i = playerPool.Count-1; i >= 0; i--){
+            float score = playerPool[i].GetComponent<PlayerScript>().getScore();
+            if (score < finalThreshold){
+                GameObject p = playerPool[i];
+                playerPool.Remove(p);
+                Destroy(p);
+            }else{
+                break;
+            }
+            
         }
     
     }
     private void Reproduce(List<GameObject> playerPool)
     {
-        int elitIndex = playerPool.Count/4;
+        int elitIndex = playerPool.Count;
         if(elitIndex < 1){
+            Debug.Log("something went really wrong");
             elitIndex = 1;
         }
 
@@ -153,6 +179,26 @@ public class GameManager : MonoBehaviour
             playerPool.Add(john);
         }
         
+    }
+
+    private float CalculateMean(List<float> scores)
+    {
+        float sum = 0f;
+        foreach (float score in scores)
+        {
+            sum += score;
+        }
+        return sum / scores.Count;
+    }
+
+    private float CalculateStandardDeviation(List<float> scores, float mean)
+    {
+        float sumSquaredDiffs = 0f;
+        foreach (float score in scores)
+        {
+            sumSquaredDiffs += Mathf.Pow(score - mean, 2);
+        }
+        return Mathf.Sqrt(sumSquaredDiffs / scores.Count);
     }
     public void TogglePause(){
         isPaused = !isPaused;
